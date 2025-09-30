@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Me - Discord Style</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #0d1117;
+    --card-bg: #161b22;
+    --text-color: #ffffff;
+    --accent-color: #0055f5;
+    --status-online: #43b581;
+    --status-idle: #faa61a;
+    --status-dnd: #f04747;
+    --status-offline: #747f8d;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0d1117, #161b22);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .profile-card {
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .banner {
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(135deg, #0055f5, #7289da);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-top: -60px;
+  }
+
+  .avatar {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 4px solid var(--card-bg);
+    object-fit: cover;
+  }
+
+  .status-indicator {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 25px;
+    height: 25px;
+    border: 3px solid var(--card-bg);
+    border-radius: 50%;
+    background-color: var(--status-online);
+  }
+
+  .status-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: var(--status-online);
+  }
+
+  h1 { font-size: 2rem; color: var(--accent-color); margin: 0.5rem 0; }
+  p { font-size: 1rem; line-height: 1.6; margin: 0.5rem 0; }
+  h3 { margin-top: 1.5rem; color: var(--accent-color); }
+
+  .socials { margin-top: 1.5rem; }
+  .socials a {
+    display: inline-block; margin: 0 12px; color: var(--accent-color);
+    font-size: 2.5rem; text-decoration: none;
+    transition: transform 0.2s, color 0.2s;
+  }
+  .socials a:hover { color: #ffffff; transform: scale(1.3); }
+
+  .skills { margin-top: 2rem; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .skill { text-align: center; font-size: 1.5rem; color: var(--accent-color); transition: transform 0.2s; }
+  .skill:hover { transform: scale(1.2); }
+  .skill i { display: block; font-size: 2.5rem; margin-bottom: 5px; }
+
+  @media (max-width: 600px) {
+    .avatar { width: 100px; height: 100px; }
+    .socials a { font-size: 2rem; margin: 0 10px; }
+    .skill i { font-size: 2rem; }
+    .banner { height: 100px; }
+  }
+</style>
+</head>
+<body>
+  <div class="profile-card">
+    <div class="banner"></div>
+    <div class="avatar-wrapper">
+      <!-- STATIC AVATAR (always loads) -->
+      <img id="avatar" src="https://thumbor.forbes.com/thumbor/fit-in/1200x0/filters:format(jpg)/https://specials-images.forbesimg.com/imageserve/5ed6636cdd5d320006caf841/0x0.jpg" alt="Profile Picture" class="avatar">
+      <div id="status-indicator" class="status-indicator"></div>
+      <span id="status-text" class="status-text">Online</span>
+    </div>
+
+    <h1>RandomX917</h1>
+    <p>Just here in this world to have fun ig.</p>
+
+    <h3>Likes</h3>
+    <p>- Chocolate</p>
+    <p>- All food basically</p>
+    <p>- Gaming</p>
+    <p>- Sleeping</p>
+    <p>- Chatting (online, social anxiety)</p>
+    <p>- Coding</p>
+
+    <div class="socials">
+      <a href="https://github.com/RandomV5" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://discord.com/users/1252383932918403143" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+      <a href="https://www.tiktok.com/@randomx917.us" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+    </div>
+
+    <div class="skills">
+      <div class="skill" title="Coding"><i class="fas fa-code"></i>Code</div>
+      <div class="skill" title="HTML"><i class="fab fa-html5"></i>HTML</div>
+      <div class="skill" title="CSS"><i class="fab fa-css3-alt"></i>CSS</div>
+      <div class="skill" title="JavaScript"><i class="fab fa-js-square"></i>JS</div>
+    </div>
+  </div>
+
+<script>
+  // OPTIONAL: Attempt live Discord status via Lanyard API
+  const userId = '1252383932918403143';
+  const statusIndicator = document.getElementById('status-indicator');
+  const statusText = document.getElementById('status-text');
+
+  fetch(`https://api.lanyard.rest/v1/users/${userId}`)
+    .then(res => res.json())
+    .then(data => {
+      if(data.success) {
+        const status = data.data.discord_status || 'offline';
+        statusText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        statusIndicator.style.backgroundColor = getStatusColor(status);
+      }
+    })
+    .catch(err => console.log('Lanyard API error', err));
+
+  function getStatusColor(status) {
+    switch(status) {
+      case 'online': return '#43b581';
+      case 'idle': return '#faa61a';
+      case 'dnd': return '#f04747';
+      case 'offline': return '#747f8d';
+      default: return '#747f8d';
+    }
+  }
+</script>
+</body>
+</html>
